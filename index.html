@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>QuickServe — Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --cream:#FAF6EE;--dark:#1A1208;--amber:#D4790A;--amber2:#F0960D;
+  --green:#2D5A3D;--muted:#7A6A52;--border:#EDE7DA;--white:#fff;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;}
+#screen-welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;text-align:center;}
+.logo-big{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--dark);}
+.logo-big span{color:var(--amber);}
+.tagline{font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin:8px 0 40px;}
+.table-select-title{font-size:.85rem;color:var(--muted);margin-bottom:16px;}
+.table-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.table-btn{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:20px 28px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .18s;box-shadow:0 3px 12px rgba(0,0,0,.07);}
+.table-btn:hover{border-color:var(--amber);}
+.table-btn .num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--dark);display:block;}
+.table-btn .lbl{font-size:.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;display:block;}
+#screen-menu{display:none;flex-direction:column;min-height:100vh;}
+.menu-header{position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
+.menu-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;}
+.menu-logo span{color:var(--amber);}
+.table-tag{background:var(--amber);color:#fff;font-size:.7rem;font-weight:600;padding:5px 12px;border-radius:20px;}
+.cart-btn{display:none;background:var(--dark);color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.cart-btn.visible{display:block;}
+.cat-tabs{display:flex;overflow-x:auto;gap:6px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--cream);scrollbar-width:none;position:sticky;top:61px;z-index:99;}
+.cat-tabs::-webkit-scrollbar{display:none;}
+.cat-tab{flex:0 0 auto;background:none;border:1.5px solid var(--border);border-radius:30px;padding:6px 14px;font-size:.78rem;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;}
+.cat-tab.active{background:var(--amber);border-color:var(--amber);color:#fff;font-weight:600;}
+.menu-body{padding:0 16px 120px;}
+.cat-section{padding-top:24px;}
+.cat-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--dark);margin-bottom:4px;}
+.cat-count{font-size:.72rem;color:var(--muted);margin-bottom:14px;display:block;}
+.item-card{display:flex;align-items:center;gap:14px;background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px;transition:border-color .18s;}
+.item-card:hover{border-color:var(--amber);}
+.item-emoji{font-size:2.2rem;flex-shrink:0;line-height:1;}
+.item-info{flex:1;min-width:0;}
+.item-name{font-weight:600;font-size:.92rem;color:var(--dark);display:block;margin-bottom:2px;}
+.item-desc{font-size:.7rem;color:var(--muted);line-height:1.45;display:block;margin-bottom:6px;}
+.item-price{font-family:'Playfair Display',serif;font-weight:700;color:var(--amber);font-size:.92rem;}
+.item-right{flex-shrink:0;display:flex;align-items:center;}
+.add-btn{width:34px;height:34px;border-radius:10px;border:2px solid var(--amber);background:#FFF5E6;color:var(--amber);font-size:1.4rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.qty-ctrl{display:flex;align-items:center;gap:8px;}
+.qty-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:#F5F0E8;color:var(--dark);font-size:1.1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.qty-plus{background:var(--amber);color:#fff;border-color:var(--amber);}
+.qty-num{font-weight:700;min-width:18px;text-align:center;font-size:.9rem;}
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:14px 20px 28px;background:linear-gradient(to top,var(--cream) 70%,transparent);display:none;}
+.bottom-bar.visible{display:block;}
+.order-btn{width:100%;background:var(--amber);color:#fff;border:none;border-radius:14px;padding:16px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 6px 24px rgba(212,121,10,.35);}
+#screen-cart{display:none;flex-direction:column;min-height:100vh;}
+.cart-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--cream);position:sticky;top:0;z-index:100;}
+.back-btn{background:none;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.cart-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;}
+.cart-body{flex:1;padding:20px 16px 140px;}
+.cart-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #F0EAE0;}
+.cart-item-info{flex:1;}
+.cart-item-name{font-weight:600;font-size:.88rem;color:var(--dark);}
+.cart-item-unit{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.cart-item-total{font-family:'Playfair Display',serif;font-weight:700;color:var(--amber);font-size:.9rem;min-width:90px;text-align:right;}
+.cart-summary{background:#FAF3E0;border-radius:14px;padding:16px 18px;margin-top:20px;}
+.cart-row{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);padding:3px 0;}
+.cart-total-row{display:flex;justify-content:space-between;font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;color:var(--dark);margin-top:10px;padding-top:10px;border-top:1px solid #E0D8CC;}
+.cart-total-amount{color:var(--amber);}
+.confirm-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:14px;padding:16px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+#screen-confirm{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:var(--dark);padding:32px 24px;text-align:center;}
+.confirm-check{font-size:5rem;margin-bottom:20px;animation:bounceIn .6s cubic-bezier(.34,1.56,.64,1);}
+@keyframes bounceIn{from{transform:scale(.3);opacity:0;}to{transform:scale(1);opacity:1;}}
+.confirm-title{font-family:'Playfair Display',serif;font-size:2rem;color:#fff;font-style:italic;margin-bottom:8px;}
+.confirm-sub{color:#9A8E7C;font-size:.88rem;line-height:1.6;margin-bottom:28px;}
+.confirm-table{color:var(--amber);font-weight:700;}
+.confirm-items{background:rgba(255,255,255,.07);border-radius:14px;padding:16px 20px;margin-bottom:24px;width:100%;max-width:360px;text-align:left;}
+.confirm-item{display:flex;justify-content:space-between;font-size:.82rem;color:#C8BCA8;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.confirm-total{display:flex;justify-content:space-between;font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:var(--amber);margin-top:10px;}
+.status-dot{display:inline-flex;align-items:center;gap:8px;background:rgba(45,90,61,.4);border-radius:10px;padding:10px 16px;color:#9DC9A8;font-size:.78rem;margin-bottom:24px;}
+.pulse-dot{width:8px;height:8px;background:#4CAF72;border-radius:50%;animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+.new-order-btn{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.2);padding:12px 28px;border-radius:30px;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;}
+</style>
+</head>
+<body>
+<div id="screen-welcome">
+  <div class="logo-big">Quick<span>Serve</span></div>
+  <p class="tagline">Commande en ligne</p>
+  <p class="table-select-title">Choisissez votre table</p>
+  <div class="table-btns">
+    <button class="table-btn" onclick="choisirTable('Table 3','Terrasse')">
+      <span class="num">3</span><span class="lbl">Terrasse</span>
+    </button>
+    <button class="table-btn" onclick="choisirTable('Table 12','Salle principale')">
+      <span class="num">12</span><span class="lbl">Salle principale</span>
+    </button>
+  </div>
+</div>
+<div id="screen-menu">
+  <div class="menu-header">
+    <div class="menu-logo">Quick<span>Serve</span></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="cart-btn" id="cart-btn" onclick="afficherPanier()">🛒 <span id="cart-count">0</span></button>
+      <div class="table-tag" id="table-tag">Table ?</div>
+    </div>
+  </div>
+  <div class="cat-tabs" id="cat-tabs">
+    <button class="cat-tab active" onclick="scrollToSection('plats',this)">🍽️ Plats chauds</button>
+    <button class="cat-tab" onclick="scrollToSection('sandwichs',this)">🥪 Sandwichs</button>
+    <button class="cat-tab" onclick="scrollToSection('chaud',this)">☕ Boissons chaudes</button>
+    <button class="cat-tab" onclick="scrollToSection('frais',this)">🧃 Boissons fraîches</button>
+    <button class="cat-tab" onclick="scrollToSection('alcool',this)">🍺 Alcools</button>
+  </div>
+  <div class="menu-body" id="menu-body"></div>
+  <div class="bottom-bar" id="bottom-bar">
+    <button class="order-btn" onclick="afficherPanier()">🛒 Voir ma commande · <span id="bar-total">0 FCFA</span></button>
+  </div>
+</div>
+<div id="screen-cart">
+  <div class="cart-header">
+    <button class="back-btn" onclick="retourMenu()">← Retour</button>
+    <span class="cart-title">Ma commande</span>
+    <div class="table-tag" id="cart-table-tag">Table ?</div>
+  </div>
+  <div class="cart-body" id="cart-body"></div>
+  <div class="bottom-bar visible">
+    <button class="confirm-btn" onclick="passerCommande()">✅ Passer la commande · <span id="confirm-total">0 FCFA</span></button>
+  </div>
+</div>
+<div id="screen-confirm">
+  <div class="confirm-check">✅</div>
+  <h1 class="confirm-title">Commande reçue !</h1>
+  <p class="confirm-sub">Votre commande pour la <span class="confirm-table" id="confirm-table-name">Table ?</span><br>est en cours de préparation 🍳</p>
+  <div class="confirm-items" id="confirm-items"></div>
+  <div class="status-dot"><div class="pulse-dot"></div>Serveur notifié — livraison estimée : 15 min</div>
+  <button class="new-order-btn" onclick="recommencer()">+ Nouvelle commande</button>
+</div>
+<script>
+const MENU=[
+  {id:'plats',cat:'🍽️ Plats Chauds',items:[
+    {id:1,emoji:'🍗',name:'Poulet Braisé',desc:'Demi-poulet mariné aux épices, servi avec attiéké',price:3500},
+    {id:2,emoji:'🍚',name:'Riz Sauce Graine',desc:'Riz blanc, sauce graine maison, poisson fumé',price:2500},
+    {id:3,emoji:'🐟',name:'Thiéboudienne',desc:'Riz au poisson sénégalais, légumes mijotés',price:3000},
+    {id:4,emoji:'🍌',name:'Aloco + Poisson Frit',desc:'Banane plantain frite, poisson frais, sauce piment',price:2000},
+    {id:5,emoji:'🫕',name:'Kedjenou de Poulet',desc:'Poulet mijoté à l\'étouffée aux épices ivoiriennes',price:3500},
+    {id:6,emoji:'🍢',name:'Brochettes de Bœuf',desc:'6 brochettes grillées, oignons, sauce harissa',price:2500},
+    {id:7,emoji:'🥜',name:'Maffé Bœuf',desc:'Ragoût de bœuf en sauce arachide, riz blanc',price:3000},
+    {id:8,emoji:'🌾',name:'Riz Jollof',desc:'Riz épicé cuit en sauce tomate, poulet grillé',price:2500},
+  ]},
+  {id:'sandwichs',cat:'🥪 Sandwichs & Snacks',items:[
+    {id:9,emoji:'🥖',name:'Sandwich Poulet',desc:'Baguette croustillante, poulet grillé, mayonnaise maison',price:1500},
+    {id:10,emoji:'🍔',name:'Burger Maison',desc:'Steak haché, cheddar fondu, salade, cornichon',price:2000},
+    {id:11,emoji:'🌯',name:'Wrap Thon',desc:'Thon émietté, crudités fraîches, sauce yaourt',price:1500},
+    {id:12,emoji:'🥚',name:'Omelette Baguette',desc:'Omelette aux légumes, fromage fondu, baguette fraîche',price:1000},
+    {id:13,emoji:'🍟',name:'Frites Maison',desc:'Pommes de terre coupées à la main, sauce ketchup',price:800},
+    {id:14,emoji:'🥗',name:'Salade de Légumes',desc:'Tomates, concombre, carottes, laitue, vinaigrette',price:1000},
+  ]},
+  {id:'chaud',cat:'☕ Boissons Chaudes',items:[
+    {id:15,emoji:'☕',name:'Café Expresso',desc:'Café arabica torréfié, serré et aromatique',price:500},
+    {id:16,emoji:'🥛',name:'Café au Lait',desc:'Expresso allongé au lait chaud crémeux',price:700},
+    {id:17,emoji:'🍵',name:'Thé à la Menthe',desc:'Thé vert, menthe fraîche, sucre de canne',price:500},
+    {id:18,emoji:'🍫',name:'Chocolat Chaud',desc:'Cacao pur, lait entier onctueux, sucre brun',price:700},
+    {id:19,emoji:'🫖',name:'Lait de Gingembre',desc:'Lait chaud infusé au gingembre frais et miel',price:600},
+    {id:20,emoji:'🌿',name:'Tisane Citronnelle',desc:'Citronnelle fraîche, gingembre, citron vert, miel',price:500},
+  ]},
+  {id:'frais',cat:'🧃 Boissons Fraîches',items:[
+    {id:21,emoji:'🥭',name:'Jus de Mangue Frais',desc:'Mangues fraîches pressées, sans sucre ajouté',price:1000},
+    {id:22,emoji:'🌺',name:'Jus de Bissap',desc:'Hibiscus, gingembre, citron vert',price:800},
+    {id:23,emoji:'🍊',name:'Jus d\'Orange Pressé',desc:'Oranges fraîches pressées à la minute',price:1000},
+    {id:24,emoji:'🥥',name:'Lait de Coco Glacé',desc:'Lait de coco naturel, vanille, glaçons pilés',price:1000},
+    {id:25,emoji:'💧',name:'Eau Minérale',desc:'Bouteille 50cl bien fraîche',price:500},
+    {id:26,emoji:'🥤',name:'Coca-Cola / Fanta',desc:'Canette 33cl bien fraîche au choix',price:700},
+    {id:27,emoji:'🍋',name:'Limonade Maison',desc:'Citron pressé, eau pétillante, menthe, sucre de canne',price:800},
+    {id:28,emoji:'🍍',name:'Jus d\'Ananas Frais',desc:'Ananas Victoria pressé, frais et naturel',price:1000},
+  ]},
+  {id:'alcool',cat:'🍺 Alcools & Bières',items:[
+    {id:29,emoji:'🍺',name:'Bière Locale (33cl)',desc:'Bière légère locale, bien fraîche',price:1000},
+    {id:30,emoji:'🍻',name:'Bière Heineken (33cl)',desc:'Bouteille importée bien fraîche',price:1500},
+    {id:31,emoji:'🥃',name:'Whisky',desc:'Verre de whisky, glaçons sur demande',price:3000},
+    {id:32,emoji:'🍷',name:'Vin Rouge (verre)',desc:'Vin rouge de table, fruité et tannique',price:2000},
+    {id:33,emoji:'🍹',name:'Cocktail Maison',desc:'Rhum, citron vert, sirop de canne, fruits frais',price:2500},
+    {id:34,emoji:'🫧',name:'Gin Tonic',desc:'Gin London Dry, eau tonique, citron vert, glaçons',price:2500},
+  ]},
+];
+let table='';
+let panier={};
+function fmt(n){return n.toLocaleString('fr-FR')+' FCFA';}
+function show(id){document.getElementById(id).style.display='flex';}
+function hide(id){document.getElementById(id).style.display='none';}
+function totalPanier(){return Object.entries(panier).reduce((s,[id,q])=>{const it=MENU.flatMap(c=>c.items).find(x=>x.id==id);return s+(it?it.price*q:0);},0);}
+function countPanier(){return Object.values(panier).reduce((a,b)=>a+b,0);}
+function choisirTable(t,lieu){
+  table=t;
+  document.getElementById('table-tag').textContent=t;
+  document.getElementById('cart-table-tag').textContent=t;
+  document.getElementById('confirm-table-name').textContent=t+' — '+lieu;
+  hide('screen-welcome');show('screen-menu');construireMenu();
+}
+function construireMenu(){
+  const body=document.getElementById('menu-body');
+  body.innerHTML='';
+  MENU.forEach(cat=>{
+    const sec=document.createElement('div');
+    sec.className='cat-section';sec.id='section-'+cat.id;
+    sec.innerHTML=`<div class="cat-title">${cat.cat}</div><span class="cat-count">${cat.items.length} articles</span>`;
+    cat.items.forEach(item=>{
+      const card=document.createElement('div');
+      card.className='item-card';card.id='card-'+item.id;
+      card.innerHTML=`<div class="item-emoji">${item.emoji}</div><div class="item-info"><span class="item-name">${item.name}</span><span class="item-desc">${item.desc}</span><span class="item-price">${fmt(item.price)}</span></div><div class="item-right" id="ctrl-${item.id}"><button class="add-btn" onclick="ajouterItem(${item.id})">+</button></div>`;
+      sec.appendChild(card);
+    });
+    body.appendChild(sec);
+  });
+}
+function ajouterItem(id){panier[id]=(panier[id]||0)+1;mettreAJourCtrl(id);mettreAJourBarre();}
+function retirerItem(id){if(!panier[id])return;panier[id]--;if(panier[id]<=0)delete panier[id];mettreAJourCtrl(id);mettreAJourBarre();}
+function mettreAJourCtrl(id){
+  const el=document.getElementById('ctrl-'+id);if(!el)return;
+  const q=panier[id]||0;
+  if(q===0){el.innerHTML=`<button class="add-btn" onclick="ajouterItem(${id})">+</button>`;}
+  else{el.innerHTML=`<div class="qty-ctrl"><button class="qty-btn" onclick="retirerItem(${id})">−</button><span class="qty-num">${q}</span><button class="qty-btn qty-plus" onclick="ajouterItem(${id})">+</button></div>`;}
+}
+function mettreAJourBarre(){
+  const cnt=countPanier();const tot=totalPanier();
+  const bar=document.getElementById('bottom-bar');const cartBtn=document.getElementById('cart-btn');
+  document.getElementById('bar-total').textContent=fmt(tot);
+  document.getElementById('cart-count').textContent=cnt;
+  if(cnt>0){bar.classList.add('visible');cartBtn.classList.add('visible');}
+  else{bar.classList.remove('visible');cartBtn.classList.remove('visible');}
+}
+function scrollToSection(id,btn){
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const sec=document.getElementById('section-'+id);
+  if(sec){sec.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+function afficherPanier(){
+  const body=document.getElementById('cart-body');
+  const allItems=MENU.flatMap(c=>c.items);
+  let html='';let tot=0;let cnt=0;
+  Object.entries(panier).forEach(([id,q])=>{
+    const it=allItems.find(x=>x.id==id);if(!it)return;
+    const sub=it.price*q;tot+=sub;cnt+=q;
+    html+=`<div class="cart-item"><span style="font-size:1.8rem">${it.emoji}</span><div class="cart-item-info"><div class="cart-item-name">${it.name}</div><div class="cart-item-unit">${fmt(it.price)} / unité</div><div class="qty-ctrl" style="margin-top:8px;"><button class="qty-btn" onclick="retirerItemPanier(${it.id})">−</button><span class="qty-num">${q}</span><button class="qty-btn qty-plus" onclick="ajouterItemPanier(${it.id})">+</button></div></div><div class="cart-item-total">${fmt(sub)}</div></div>`;
+  });
+  html+=`<div class="cart-summary"><div class="cart-row"><span>${cnt} article(s)</span><span>${fmt(tot)}</span></div><div class="cart-total-row"><span>Total</span><span class="cart-total-amount">${fmt(tot)}</span></div></div>`;
+  body.innerHTML=html;
+  document.getElementById('confirm-total').textContent=fmt(tot);
+  hide('screen-menu');show('screen-cart');
+}
+function ajouterItemPanier(id){ajouterItem(id);afficherPanier();}
+function retirerItemPanier(id){retirerItem(id);afficherPanier();}
+function retourMenu(){hide('screen-cart');show('screen-menu');}
+function passerCommande(){
+  const allItems=MENU.flatMap(c=>c.items);
+  let html='';let tot=0;
+  Object.entries(panier).forEach(([id,q])=>{
+    const it=allItems.find(x=>x.id==id);if(!it)return;
+    const sub=it.price*q;tot+=sub;
+    html+=`<div class="confirm-item"><span>${it.emoji} ${it.name} ×${q}</span><span>${fmt(sub)}</span></div>`;
+  });
+  html+=`<div class="confirm-total"><span>Total</span><span>${fmt(tot)}</span></div>`;
+  document.getElementById('confirm-items').innerHTML=html;
+  hide('screen-cart');show('screen-confirm');
+}
+function recommencer(){panier={};hide('screen-confirm');show('screen-welcome');}
+</script>
+</body>
+</html>
